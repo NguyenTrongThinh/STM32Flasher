@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">STM32Flasher</string>
+    <string name="btn_DFUMode">Enter DFU Mode</string>
+    <string name="btnNormalMode">Normal Mode</string>
+    <string name="btnProgram">Program</string>
+    <string name="btnErase">Mass Erase</string>
+    <string name="txtlogTitle">Upgrade Log</string>
+    <string name="txtDefaultFilePath">/storage/emulated/0/Download/YF2.dfu</string>
+</resources>
