@@ -6,4 +6,5 @@
     <string name="btnErase">Mass Erase</string>
     <string name="txtlogTitle">Upgrade Log</string>
     <string name="txtDefaultFilePath">/storage/emulated/0/Download/YF2.dfu</string>
+    <string name="btnSelectW">Select FW</string>
 </resources>

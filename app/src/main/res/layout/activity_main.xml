@@ -65,7 +65,15 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    android:weightSum="10">
+                    android:weightSum="15">
+
+                    <Button
+                        android:id="@+id/btnSelectF"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="5dp"
+                        android:layout_weight="5"
+                        android:text="@string/btnSelectW" />
 
                     <Button
                         android:id="@+id/btnMassErase"

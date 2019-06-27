@@ -2,11 +2,12 @@ package sg.com.styl.stm32flasher;
 
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.IntentFilter;
 import android.hardware.usb.UsbManager;
-import android.os.Handler;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,17 +19,20 @@ import android.widget.Toast;
 public class MainActivity extends AppCompatActivity implements OnUsbChangeListener, OnFirmwareUpgrade{
 
     private String TAG = "MainActivity: ";
-    Button btnMassErase, btnProgram;
+    Button btnMassErase, btnProgram, btnSelectFW;
     ProgressBar upgradeProgressbar;
     TextView txtLog;
     ScrollView scrollLog;
+    final static int FILE_REQUEST = 7;
     private STM32F042UsbManager m_Stm32F042UsbManager;
     private DeviceFirmwareUpgrade deviceFirmwareUpgrade;
+    DfuFile dfuFile;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         findViewInXml();
+        dfuFile = new DfuFile();
         deviceFirmwareUpgrade = new DeviceFirmwareUpgrade(this, STM32F042UsbManager.getStm32f042UsbVid(), STM32F042UsbManager.getStm32f042UsbPid());
         deviceFirmwareUpgrade.setOnFirmwareUpgrade(this);
         btnMassErase.setOnClickListener(new View.OnClickListener() {
@@ -42,17 +46,39 @@ public class MainActivity extends AppCompatActivity implements OnUsbChangeListen
         btnProgram.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DfuFile dfuFile = new DfuFile();
-                dfuFile.filePath = "/storage/emulated/0/Download/YF2.dfu";
-                deviceFirmwareUpgrade.setDfuFile(dfuFile);
-
-                deviceFirmwareUpgrade.program();
+                if (!dfuFile.filePath.isEmpty()) {
+                    deviceFirmwareUpgrade.setDfuFile(dfuFile);
+                    deviceFirmwareUpgrade.program();
+                }
 
             }
         });
+        btnSelectFW.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent();
+                intent.setType("*/*");
+                intent.setAction(Intent.ACTION_GET_CONTENT);
+                startActivityForResult(intent, FILE_REQUEST);
+            }
+        });
+
+    }
+
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode){
+            case FILE_REQUEST:
+                if (resultCode == RESULT_OK){
+                    String Path = data.getData().getPath();
+                    onFirmwareUpgradeLog(Path);
+                    dfuFile.filePath = Path;
+                }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 
     private void findViewInXml() {
+        btnSelectFW = findViewById(R.id.btnSelectF);
         btnMassErase = findViewById(R.id.btnMassErase);
         btnProgram = findViewById(R.id.btnProgram);
         txtLog = findViewById(R.id.txtLog);
