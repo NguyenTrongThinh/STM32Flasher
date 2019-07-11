@@ -16,6 +16,8 @@ import android.widget.ScrollView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.nfc_programmer.GetPath;
+
 public class MainActivity extends AppCompatActivity implements OnUsbChangeListener, OnFirmwareUpgrade{
 
     private String TAG = "MainActivity: ";
@@ -69,7 +71,7 @@ public class MainActivity extends AppCompatActivity implements OnUsbChangeListen
         switch (requestCode){
             case FILE_REQUEST:
                 if (resultCode == RESULT_OK){
-                    String Path = data.getData().getPath();
+                    String Path = GetPath.getPath(this, data.getData());
                     onFirmwareUpgradeLog(Path);
                     dfuFile.filePath = Path;
                 }
